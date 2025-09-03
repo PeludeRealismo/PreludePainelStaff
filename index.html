@@ -1,0 +1,1874 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Staff Portal - The Isle Prelude Realismo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #4285f4;
+            --accent: #2962ff;
+            --text: #202124;
+            --text-light: #5f6368;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #dadce0;
+            --success: #0f9d58;
+            --warning: #f4b400;
+            --danger: #db4437;
+            --info: #4285f4;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --denuncias-bg: none;
+        }
+
+        /* Tema Escuro */
+        [data-theme="dark"] {
+            --primary: #2962ff;
+            --primary-dark: #0039cb;
+            --secondary: #448aff;
+            --accent: #2979ff;
+            --text: #e8eaed;
+            --text-light: #9aa0a6;
+            --bg: #202124;
+            --card-bg: #303134;
+            --border: #5f6368;
+            --shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Tema Verde */
+        [data-theme="green"] {
+            --primary: #0f9d58;
+            --primary-dark: #0b8043;
+            --secondary: #4285f4;
+            --accent: #00c853;
+            --text: #202124;
+            --text-light: #5f6368;
+            --bg: #e8f5e9;
+            --card-bg: #ffffff;
+            --border: #c8e6c9;
+        }
+
+        /* Tema Vermelho/Preto */
+        [data-theme="red-black"] {
+            --primary: #b71c1c;
+            --primary-dark: #7f0000;
+            --secondary: #f44336;
+            --accent: #ff5252;
+            --text: #f5f5f5;
+            --text-light: #e0e0e0;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --border: #424242;
+            --shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Novos temas adicionados */
+        [data-theme="neon-azul"] {
+            --primary: #00d4ff;
+            --primary-dark: #00b7e6;
+            --text: #e9faff;
+            --text-light: #bfeefc;
+            --bg: #041923;
+            --card-bg: #052733;
+            --border: #064351;
+        }
+
+        [data-theme="dourado-preto"] {
+            --primary: #d4af37;
+            --primary-dark: #a67c1a;
+            --text: #fff9ec;
+            --text-light: #f0e6c8;
+            --bg: #070707;
+            --card-bg: #111111;
+            --border: #40331a;
+        }
+
+        [data-theme="roxo-neon"] {
+            --primary: #9b59ff;
+            --primary-dark: #7a3df2;
+            --text: #f6efff;
+            --text-light: #dfd3ff;
+            --bg: #0b031a;
+            --card-bg: #120723;
+            --border: #4b2b67;
+        }
+
+        [data-theme="roxo"] {
+            --primary: #6a1b9a;
+            --primary-dark: #4a0072;
+            --text: #fff;
+            --text-light: #d2c0e8;
+            --bg: #f6f0fa;
+            --card-bg: #ffffff;
+            --border: #e4d7f0;
+        }
+
+        [data-theme="amarelo"] {
+            --primary: #f4c430;
+            --primary-dark: #caa10a;
+            --text: #2b2b2b;
+            --text-light: #6b5b1d;
+            --bg: #fffbea;
+            --card-bg: #fff;
+            --border: #ffeaa7;
+        }
+
+        [data-theme="verde-agua"] {
+            --primary: #2ad6c6;
+            --primary-dark: #1aa79a;
+            --text: #083033;
+            --text-light: #3a7f79;
+            --bg: #effffb;
+            --card-bg: #ffffff;
+            --border: #cff7f2;
+        }
+
+        [data-theme="preto-branco"] {
+            --primary: #000000;
+            --primary-dark: #222222;
+            --text: #ffffff;
+            --text-light: #cfcfcf;
+            --bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border: #2a2a2a;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: var(--transition); }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display:flex; flex-direction:column;
+        }
+
+        /* Toast */
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index:9999; display:flex; flex-direction:column; gap:10px; }
+        .toast { padding:12px 20px; border-radius:6px; color:white; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; animation: slideInRight 0.3s ease forwards; }
+        .toast.success { background-color:var(--success); } .toast.error{ background-color:var(--danger);} .toast.info{ background-color:var(--info);}
+        @keyframes slideInRight { from {transform: translateX(100%);opacity:0;} to {transform: translateX(0);opacity:1;} }
+
+        /* login */
+        .login-container { display:flex; justify-content:center; align-items:center; min-height:100vh; background: linear-gradient(135deg,var(--primary) 0%, var(--primary-dark) 100%); padding:20px;}
+        .login-box { background-color:var(--card-bg); border-radius:10px; box-shadow:var(--shadow); width:100%; max-width:420px; padding:30px; text-align:center;}
+        .login-logo{ margin-bottom:20px; color:var(--primary); font-size:2.5rem;}
+        .login-title{ font-size:1.8rem; margin-bottom:10px; color:var(--text);}
+        .input-group{ margin-bottom:20px; text-align:left;}
+        .input-group label{ display:block; margin-bottom:8px; color:var(--text); font-weight:500;}
+        .input-group input{ width:100%; padding:12px 15px; border:1px solid var(--border); border-radius:6px; background-color:var(--card-bg); color:var(--text); font-size:1rem;}
+        .btn{ display:inline-block; padding:12px 24px; background-color:var(--primary); color:white; border:none; border-radius:6px; cursor:pointer; font-size:1rem; font-weight:500;}
+        .btn:hover{ background-color:var(--primary-dark); transform: translateY(-2px); }
+        .btn-block{ width:100%; } .btn-sm{ padding:8px 12px; font-size:0.9rem;}
+        .alert { padding:12px 16px; border-radius:6px; margin-bottom:20px; display:none;}
+        .alert-error { background-color:#ffebee; color:#c62828; border:1px solid #ef9a9a; }
+
+        /* app */
+        .app-container{ display:none; flex-direction:column; min-height:100vh; }
+        .header{ background-color:var(--card-bg); box-shadow:var(--shadow); padding:15px 30px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; }
+        .logo{ font-size:1.8rem; color:var(--primary); margin-right:15px; }
+        .app-name{ font-size:1.4rem; font-weight:600; color:var(--text);}
+        .header-right{ display:flex; align-items:center; gap:10px; }
+        .nav{ background-color:var(--card-bg); padding:0 30px; box-shadow:var(--shadow); }
+        .nav-list{ display:flex; list-style:none; overflow-x:auto; }
+        .nav-item{ padding:15px 20px; cursor:pointer; border-bottom:3px solid transparent; font-weight:500; white-space:nowrap;}
+        .nav-item.active{ color:var(--primary); border-bottom-color:var(--primary); }
+
+        .main-content{ flex:1; padding:30px; }
+        .tab-content{ display:none; } .tab-content.active{ display:block; }
+
+        #denuncias { background: var(--denuncias-bg); background-size: cover; background-position:center; }
+
+        .dashboard-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:20px; margin-bottom:30px;}
+        .card{ background-color:var(--card-bg); border-radius:10px; box-shadow:var(--shadow); padding:20px; }
+        .card-title{ font-size:1.2rem; margin-bottom:15px; color:var(--text); font-weight:600; }
+        .stat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
+        .stat-item{ text-align:center; padding:15px; border-radius:8px; background-color: rgba(26,115,232,0.06); }
+        .stat-value{ font-size:2rem; font-weight:700; color:var(--primary); margin-bottom:5px; }
+        .stat-label{ color:var(--text-light); font-size:0.9rem; }
+
+        .quick-actions{ display:grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap:15px; margin-top:20px; }
+        .action-btn{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; background-color:var(--card-bg); border-radius:8px; box-shadow:var(--shadow); cursor:pointer; transition:var(--transition); }
+        .action-btn:hover{ transform:translateY(-5px); box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+        .action-icon{ font-size:2rem; color:var(--primary); margin-bottom:10px; }
+        .action-text{ font-weight:500; color:var(--text); }
+
+        .history-list{ margin-top:20px; } .history-item{ padding:15px; border-bottom:1px solid var(--border); display:flex; align-items:center; } .history-item:last-child{ border-bottom:none; }
+        .history-icon{ margin-right:15px; color:var(--primary);} .history-content{ flex:1;} .history-title{ font-weight:500; margin-bottom:5px; } .history-time{ font-size:0.8rem; color:var(--text-light); }
+
+        /* board */
+        .board-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+        .board-actions{ display:flex; gap:10px; flex-wrap:wrap;}
+        .board{ display:flex; overflow-x:auto; gap:20px; padding:10px 0; min-height:280px; }
+        .board-column{ min-width:300px; background-color:var(--card-bg); border-radius:8px; box-shadow:var(--shadow); padding:15px; position:relative; }
+        .column-header{ padding-bottom:15px; margin-bottom:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+        .column-title{ font-weight:600; color:var(--text); }
+        .column-count{ background-color:var(--primary); color:white; border-radius:50%; width:25px; height:25px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; }
+
+        .column-cards{ min-height:100px; }
+        .card-item{ background-color:var(--bg); border-radius:8px; padding:15px; margin-bottom:15px; box-shadow:var(--shadow); cursor:grab; position:relative; }
+        .card-actions{ position:absolute; top:10px; right:10px; display:flex; gap:5px; }
+        .card-action-btn{ background:rgba(255,255,255,0.8); border:none; border-radius:4px; width:25px; height:25px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.8rem; color:var(--text); }
+        .card-tags{ display:flex; gap:5px; margin-bottom:10px; flex-wrap:wrap; }
+        .card-tag{ padding:3px 8px; border-radius:4px; font-size:0.7rem; font-weight:500; color:#fff; }
+
+        .card-content{ margin-bottom:10px; }
+        .card-title{ font-weight:600; margin-bottom:5px; font-size:1rem; }
+        .card-desc{ font-size:0.9rem; color:var(--text-light); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  line-clamp: 0.9rem; /* PATCH compatibilidade */
+        .card-footer{ display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-light); }
+        .card-timer{ display:flex; align-items:center; gap:5px; font-weight:600; color:var(--primary); }
+
+        /* anexos */
+        .anexos-preview{ margin-top:15px; display:flex; flex-wrap:wrap; gap:10px; }
+        .anexo-item{ position:relative; width:80px; height:80px; border-radius:6px; overflow:hidden; border:1px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; }
+        .anexo-item img{ width:100%; height:100%; object-fit:cover; cursor:pointer; }
+        .anexo-item .file-icon{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; background-color:var(--bg); font-size:24px; cursor:pointer;}
+        .anexo-remove{ position:absolute; top:2px; right:2px; background:rgba(255,255,255,0.8); border:none; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; }
+
+        .anexos-container{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:15px; }
+        .anexo-section{ border:2px dashed var(--border); border-radius:8px; padding:15px; text-align:center; cursor:pointer; }
+        .anexo-section:hover{ border-color:var(--primary); }
+        .anexo-section i{ font-size:2rem; color:var(--text-light); margin-bottom:10px; }
+        .anexo-section p{ margin-bottom:10px; color:var(--text-light); }
+
+        /* fichas */
+        .fichas-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+        .players-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+        .player-card{ background-color:var(--card-bg); border-radius:10px; box-shadow:var(--shadow); padding:20px; position:relative; }
+        .player-actions{ position:absolute; top:15px; right:15px; display:flex; gap:5px; }
+        .player-id{ font-size:0.9rem; color:var(--text-light); margin-bottom:10px; }
+        .player-name{ font-size:1.2rem; font-weight:600; margin-bottom:10px; color:var(--text); }
+        .player-behavior{ font-size:0.9rem; margin-bottom:15px; color:var(--text-light); }
+        .player-stats{ display:flex; gap:15px; }
+        .stat-badge{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; border-radius:8px; background-color: rgba(26,115,232,0.06); min-width:70px; }
+        .stat-badge-value{ font-size:1.5rem; font-weight:700; color:var(--primary); }
+        .stat-badge-label{ font-size:0.7rem; color:var(--text-light); }
+
+        /* modal */
+        .modal{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
+        .modal-content{ background-color:var(--card-bg); border-radius:10px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow); }
+        .modal-header{ padding:20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+        .modal-title{ font-size:1.4rem; font-weight:600; }
+        .modal-close{ background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-light); }
+        .modal-body{ padding:20px; }
+        .modal-footer{ padding:20px; border-top:1px solid var(--border); display:flex; justify-content:flex-end; gap:10px; }
+
+        .form-group{ margin-bottom:20px; }
+        .form-group label{ display:block; margin-bottom:8px; font-weight:500; }
+        .form-group input, .form-group textarea, .form-group select { width:100%; padding:10px 15px; border:1px solid var(--border); border-radius:6px; background-color:var(--card-bg); color:var(--text); font-size:1rem; }
+        .form-group textarea { min-height:100px; resize:vertical; }
+        .file-upload{ border:2px dashed var(--border); border-radius:8px; padding:20px; text-align:center; cursor:pointer; margin-bottom:15px; }
+        .file-upload:hover{ border-color:var(--primary); }
+
+        .tags-container{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px; }
+        .tag-item{ display:flex; align-items:center; gap:5px; padding:5px 10px; border-radius:20px; font-size:0.8rem; font-weight:500; cursor:pointer; }
+        .tag-color{ width:15px; height:15px; border-radius:50%; }
+
+        .denuncia-details{ margin-top:20px; }
+        .detail-item{ margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid var(--border); }
+        .detail-label{ font-weight:600; margin-bottom:5px; color:var(--text); }
+        .detail-value{ color:var(--text-light); }
+
+        @media (max-width:768px){
+            .dashboard-grid{ grid-template-columns:1fr; }
+            .stat-grid{ grid-template-columns:1fr; }
+            .board-header{ flex-direction:column; align-items:flex-start; gap:10px; }
+            .fichas-header{ flex-direction:column; align-items:flex-start; gap:10px; }
+            .anexos-container{ grid-template-columns:1fr; }
+        }
+
+    
+/* PATCH START: BG Quadro de Denúncias */
+#quadro-denuncias, #denuncias, .board, #denunciasBoard {
+  background-image: var(--denuncias-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* PATCH END */
+</style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Login -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box slide-in">
+            <div class="login-logo"><i class="fas fa-dragon"></i></div>
+            <h1 class="login-title">Staff Portal</h1>
+            <p class="login-subtitle">The Isle Prelude Realismo</p>
+            <div class="alert alert-error" id="loginError">
+                <i class="fas fa-exclamation-circle"></i> Login ou senha incorretos!
+            </div>
+            <div class="input-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" placeholder="Digite seu usuário">
+            </div>
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" placeholder="Digite sua senha">
+            </div>
+            <button class="btn btn-block" id="loginBtn">Entrar</button>
+        </div>
+    </div>
+
+    <!-- App -->
+    <div class="app-container" id="appContainer">
+        <header class="header">
+            <div style="display:flex; align-items:center;">
+                <div class="logo"><i class="fas fa-dragon"></i></div>
+                <div class="app-name">Staff Portal</div>
+            </div>
+            <div class="header-right">
+                <div class="user-info" id="userInfo">Olá, Kpz</div>
+                <button class="btn" id="logoutBtn">Sair</button>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item active" data-tab="dashboard">Dashboard</li>
+                <li class="nav-item" data-tab="denuncias">Quadro de Denúncias</li>
+                <li class="nav-item" data-tab="fichas">Fichas de Players</li>
+                <li class="nav-item" data-tab="historico">Histórico</li>
+                <li class="nav-item" data-tab="config">Configurações</li>
+                <li class="nav-item" data-tab="anotacoes">Anotações Gerais</li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <!-- Dashboard -->
+            <div class="tab-content active" id="dashboard">
+                <h2>Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3 class="card-title">Estatísticas de Denúncias</h3>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="lastMonth">0</div>
+                                <div class="stat-label">Mês Anterior</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="currentMonth">0</div>
+                                <div class="stat-label">Mês Atual</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalDenuncias">0</div>
+                                <div class="stat-label">Total Finalizadas</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="avgTime">—</div>
+                                <div class="stat-label">Tempo Médio</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">Ações Rápidas</h3>
+                        <div class="quick-actions">
+                            <div class="action-btn" id="newDenunciaBtn">
+                                <div class="action-icon"><i class="fas fa-exclamation-circle"></i></div>
+                                <div class="action-text">Nova Denúncia</div>
+                            </div>
+                            <div class="action-btn" id="newFichaBtn">
+                                <div class="action-icon"><i class="fas fa-user-plus"></i></div>
+                                <div class="action-text">Nova Ficha</div>
+                            </div>
+                            <div class="action-btn" id="refreshBtn">
+                                <div class="action-icon"><i class="fas fa-sync-alt"></i></div>
+                                <div class="action-text">Atualizar</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Histórico de Atividades Recentes</h3>
+                    <div class="history-list" id="historyList"></div>
+                </div>
+            </div>
+
+            <!-- Quadro de Denúncias -->
+            <div class="tab-content" id="denuncias">
+                <div class="board-header">
+                    <h2>Quadro de Denúncias</h2>
+                    <div class="board-actions">
+                        <button class="btn" id="newDenunciaBoardBtn">Nova Denúncia</button>
+                        <button class="btn" id="newTopicoBtn">Novo Tópico</button>
+                        <button class="btn" id="newTagBtn">Nova Etiqueta</button>
+                        <button class="btn" id="manageTopicosBtn">Gerenciar Tópicos</button>
+                    </div>
+                </div>
+                <div class="board" id="denunciasBoard"></div>
+            </div>
+
+            <!-- Fichas -->
+            <div class="tab-content" id="fichas">
+                <div class="fichas-header">
+                    <h2>Fichas de Players</h2>
+                    <button class="btn" id="newFichaBoardBtn">Criar Nova Ficha de Player</button>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <input type="text" id="searchPlayer" placeholder="Pesquisar por ID Steam ou Nick...">
+                    </div>
+                    <div class="players-grid" id="playersList"></div>
+                </div>
+            </div>
+
+            <!-- Histórico -->
+            <div class="tab-content" id="historico">
+                <h2>Histórico Completo de Atividades</h2>
+                <div class="card">
+                    <div class="history-list" id="fullHistoryList"></div>
+                </div>
+            </div>
+
+            <!-- Configurações -->
+            <div class="tab-content" id="config">
+                <h2>Configurações</h2>
+                <div class="card">
+                    <h3 class="card-title">Tema Visual</h3>
+                    <div class="form-group">
+                        <label for="themeSelect">Selecionar Tema</label>
+                        <select id="themeSelect">
+                            <option value="blue">Azul (Padrão)</option>
+                            <option value="dark">Escuro</option>
+                            <option value="green">Verde</option>
+                            <option value="red-black">Vermelho/Preto</option>
+                            <option value="neon-azul">Neon Azulado</option>
+                            <option value="dourado-preto">Dourado + Preto</option>
+                            <option value="roxo-neon">Roxo Neon</option>
+                            <option value="roxo">Roxo</option>
+                            <option value="amarelo">Amarelo</option>
+                            <option value="verde-agua">Verde Água</option>
+                            <option value="preto-branco">Preto + Branco</option>
+                        </select>
+                    </div>
+
+                    <h3 class="card-title">Background do Quadro de Denúncias</h3>
+                    <div class="file-upload" id="bgUpload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Arraste e solte uma imagem JPG/JPEG aqui ou clique para selecionar</p>
+                        <input type="file" id="bgInput" accept=".jpg,.jpeg" style="display:none;">
+                    </div>
+                    <div id="bgPreview" class="anexos-preview"></div>
+                    <button class="btn" id="restoreBgBtn" style="margin-top:10px;">Restaurar Padrão</button>
+                </div>
+            </div>
+
+            <!-- Anotações -->
+            <div class="tab-content" id="anotacoes">
+                <h2>Anotações Gerais</h2>
+                <div class="card">
+                    <div class="form-group">
+                        <textarea id="newNote" placeholder="Digite sua anotação aqui..."></textarea>
+                    </div>
+                    <button class="btn" id="saveNoteBtn">Salvar Anotação</button>
+                    <div id="notesList"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modais -->
+    <!-- Denúncia modal -->
+    <div class="modal" id="denunciaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="denunciaModalTitle">Nova Denúncia</h3>
+                <button class="modal-close" id="closeDenunciaX">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="steamId">ID Steam</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="steamId" placeholder="ID Steam do jogador">
+                        <button class="btn" id="searchSteamBtn">Pesquisar</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="discordId">ID Discord</label>
+                    <input type="text" id="discordId" placeholder="ID Discord do jogador">
+                </div>
+                <div class="form-group">
+                    <label for="playerName">Nome do Player no Discord</label>
+                    <input type="text" id="playerName" placeholder="Nome do player no Discord">
+                </div>
+                <div class="form-group">
+                    <label for="reporterName">Nome e ID do Denunciante</label>
+                    <input type="text" id="reporterName" placeholder="Nome e ID do denunciante">
+                </div>
+                <div class="form-group">
+                    <label for="denunciaDesc">Descrição</label>
+                    <textarea id="denunciaDesc" placeholder="Descreva os detalhes da denúncia..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Vincular Player</label>
+                    <select id="vincularPlayer" multiple style="height:100px;"></select>
+                    <small>Segure Ctrl para selecionar múltiplos players</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Etiquetas</label>
+                    <div class="tags-container" id="tagsContainer"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Anexos</label>
+                    <div class="anexos-container">
+                        <div class="anexo-section" id="printsUpload">
+                            <i class="fas fa-image"></i>
+                            <p>Arraste e solte prints aqui</p>
+                            <input type="file" id="printsInput" multiple accept=".jpg,.jpeg,.png" style="display:none;">
+                        </div>
+                        <div class="anexo-section" id="replaysUpload">
+                            <i class="fas fa-file-video"></i>
+                            <p>Arraste e solte arquivos .replay aqui</p>
+                            <input type="file" id="replaysInput" multiple accept=".replay" style="display:none;">
+                        </div>
+                    </div>
+                    <div id="anexosPreview" class="anexos-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label><input type="checkbox" id="startTimer"> Iniciar cronômetro de 24h</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelDenunciaBtn" style="background:var(--text-light);">Cancelar</button>
+                <button class="btn" id="saveDenunciaBtn">Salvar Denúncia</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ficha modal -->
+    <div class="modal" id="fichaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Ficha de Player</h3>
+                <button class="modal-close" id="closeFichaX">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label for="fichaSteamId">ID Steam</label><input type="text" id="fichaSteamId"></div>
+                <div class="form-group"><label for="fichaDiscordId">ID Discord</label><input type="text" id="fichaDiscordId"></div>
+                <div class="form-group"><label for="fichaPlayerName">Nome do Player no Discord</label><input type="text" id="fichaPlayerName"></div>
+                <div class="form-group"><label for="fichaBehavior">Resumo do Comportamento</label><textarea id="fichaBehavior"></textarea></div>
+
+                <div class="form-group">
+                    <label>Strikes e Orientações</label>
+                    <div style="display:flex; gap:20px;">
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <div class="stat-badge">
+                                <div class="stat-badge-value" id="strikesCount">0</div>
+                                <div class="stat-badge-label">Strikes</div>
+                            </div>
+                            <div style="display:flex; gap:5px; margin-top:10px;">
+                                <button class="btn btn-sm" id="addStrikeBtn">+</button>
+                                <button class="btn btn-sm" id="removeStrikeBtn">-</button>
+                            </div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <div class="stat-badge">
+                                <div class="stat-badge-value" id="orientacoesCount">0</div>
+                                <div class="stat-badge-label">Orientações</div>
+                            </div>
+                            <div style="display:flex; gap:5px; margin-top:10px;">
+                                <button class="btn btn-sm" id="addOrientacaoBtn">+</button>
+                                <button class="btn btn-sm" id="removeOrientacaoBtn">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelFichaBtn" style="background:var(--text-light);">Cancelar</button>
+                <button class="btn" id="saveFichaBtn">Salvar Ficha</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag modal -->
+    <div class="modal" id="tagModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nova Etiqueta</h3>
+                <button class="modal-close" id="closeTagX">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label for="tagName">Nome da Etiqueta</label><input type="text" id="tagName"></div>
+                <div class="form-group"><label for="tagColor">Cor da Etiqueta</label><input type="color" id="tagColor" value="#1a73e8"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="cancelTagBtn" style="background:var(--text-light);">Cancelar</button>
+                <button class="btn" id="saveTagBtn">Salvar Etiqueta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage topics -->
+    <div class="modal" id="manageTopicosModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Gerenciar Tópicos</h3>
+                <button class="modal-close" id="closeManageX">&times;</button>
+            </div>
+            <div class="modal-body"><div id="topicosList"></div></div>
+            <div class="modal-footer"><button class="btn" id="closeManageTopicosBtn" style="background:var(--text-light);">Fechar</button></div>
+        </div>
+    </div>
+
+    <!-- Denuncia details -->
+    <div class="modal" id="denunciaDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalhes da Denúncia</h3>
+                <button class="modal-close" id="closeDetailsX">&times;</button>
+            </div>
+            <div class="modal-body"><div class="denuncia-details" id="denunciaDetailsContent"></div></div>
+            <div class="modal-footer"><button class="btn" id="closeDenunciaDetailsBtn" style="background:var(--text-light);">Fechar</button></div>
+        </div>
+    </div>
+
+    <!-- Lightbox para imagens -->
+    <div class="modal" id="lightboxModal">
+        <div class="modal-content" style="max-width:1000px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Visualizar Imagem</h3>
+                <button class="modal-close" id="closeLightboxX">&times;</button>
+            </div>
+            <div class="modal-body" style="display:flex; justify-content:center; align-items:center; padding:40px;">
+                <img id="lightboxImage" src="" alt="Preview" style="max-width:100%; max-height:80vh; border-radius:8px;" />
+            </div>
+        </div>
+    </div>
+
+<script>
+/* =========================
+   Dados iniciais e elementos
+   ========================= */
+const validLogins = {
+    "Kpz":"Dudek","Reuel":"Carol","Izzy":"Izzy","Sky":"Skyfall","Tiago":"Preludiando","Meleys":"Meleyssup",
+    "Fokua":"woo.nerf","Lorenaah":"SupGLorenah","Lelelobo":"Lelebas","Nova":"Apaixonadopelomaike",
+    "Hard":"imperador da oceania","Tokouma":"Cute","Perséfone":"persefonee","Luke":"Lukezinho","Maike":"Maikezinho",
+    "Fernando":"Feh","Jaspion":"Samuca","Xayzi":"xay","Mink":"minkink","Gouvea":"Gou","Patoqvoa":"udon","Realiig":"Real","Sid":"Sid fã do maike"
+};
+
+// DOM shortcuts
+const loginScreen = document.getElementById('loginScreen');
+const appContainer = document.getElementById('appContainer');
+const loginError = document.getElementById('loginError');
+const loginBtn = document.getElementById('loginBtn');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const userInfo = document.getElementById('userInfo');
+const logoutBtn = document.getElementById('logoutBtn');
+const navItems = document.querySelectorAll('.nav-item');
+const tabContents = document.querySelectorAll('.tab-content');
+
+const denunciaModal = document.getElementById('denunciaModal');
+const fichaModal = document.getElementById('fichaModal');
+const tagModal = document.getElementById('tagModal');
+const manageTopicosModal = document.getElementById('manageTopicosModal');
+const denunciaDetailsModal = document.getElementById('denunciaDetailsModal');
+const lightboxModal = document.getElementById('lightboxModal');
+
+const newDenunciaBtn = document.getElementById('newDenunciaBtn');
+const newFichaBtn = document.getElementById('newFichaBtn');
+const newFichaBoardBtn = document.getElementById('newFichaBoardBtn');
+const newDenunciaBoardBtn = document.getElementById('newDenunciaBoardBtn');
+const newTopicoBtn = document.getElementById('newTopicoBtn');
+const newTagBtn = document.getElementById('newTagBtn');
+const manageTopicosBtn = document.getElementById('manageTopicosBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+
+const cancelDenunciaBtn = document.getElementById('cancelDenunciaBtn');
+const cancelFichaBtn = document.getElementById('cancelFichaBtn');
+const cancelTagBtn = document.getElementById('cancelTagBtn');
+
+const saveDenunciaBtn = document.getElementById('saveDenunciaBtn');
+const saveFichaBtn = document.getElementById('saveFichaBtn');
+const saveTagBtn = document.getElementById('saveTagBtn');
+
+const searchSteamBtn = document.getElementById('searchSteamBtn');
+const themeSelect = document.getElementById('themeSelect');
+
+const historyList = document.getElementById('historyList');
+const fullHistoryList = document.getElementById('fullHistoryList');
+
+const printsUpload = document.getElementById('printsUpload');
+const printsInput = document.getElementById('printsInput');
+const replaysUpload = document.getElementById('replaysUpload');
+const replaysInput = document.getElementById('replaysInput');
+const anexosPreview = document.getElementById('anexosPreview');
+
+const bgUpload = document.getElementById('bgUpload');
+const bgInput = document.getElementById('bgInput');
+const bgPreview = document.getElementById('bgPreview');
+
+const vincularPlayer = document.getElementById('vincularPlayer');
+const tagsContainer = document.getElementById('tagsContainer');
+
+const playersList = document.getElementById('playersList');
+
+const denunciasBoard = document.getElementById('denunciasBoard');
+
+const closeDenunciaX = document.getElementById('closeDenunciaX');
+const closeFichaX = document.getElementById('closeFichaX');
+const closeTagX = document.getElementById('closeTagX');
+const closeManageX = document.getElementById('closeManageX');
+const closeDetailsX = document.getElementById('closeDetailsX');
+const closeLightboxX = document.getElementById('closeLightboxX');
+
+/* =========================
+   Estado e persistência
+   ========================= */
+let denuncias = JSON.parse(localStorage.getItem('denuncias')) || [];
+let fichas = JSON.parse(localStorage.getItem('fichas')) || [];
+let historico = JSON.parse(localStorage.getItem('historico')) || [];
+let tags = JSON.parse(localStorage.getItem('tags')) || [
+    { id:1, nome:'Urgente', cor:'#ef5350' },
+    { id:2, nome:'Média', cor:'#42a5f5' },
+    { id:3, nome:'Baixa', cor:'#66bb6a' }
+];
+let topicos = JSON.parse(localStorage.getItem('topicos')) || [
+    { id:1, titulo:'Denuncias pegas' },
+    { id:2, titulo:'denúncias em andamento' },
+    { id:3, titulo:'denuncias finalizadas' },
+    { id:4, titulo:'denuncias expiradas' },
+    { id:5, titulo:'bans aplicados' }
+];
+
+let anexosTemporarios = []; // {type:'image'|'replay', name, data(base64)}
+let editingDenunciaId = null;
+let editingFichaId = null;
+
+/* =========================
+   Utilitários / UI helpers
+   ========================= */
+function showToast(message, type='info'){
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    let icon = 'fas fa-info-circle';
+    if (type==='success') icon = 'fas fa-check-circle';
+    if (type==='error') icon = 'fas fa-exclamation-circle';
+    toast.innerHTML = `<i class="${icon}"></i><span>${message}</span>`;
+    toastContainer.appendChild(toast);
+    setTimeout(()=> toast.remove(), 3000);
+}
+
+
+/* PATCH START: utils persistência */
+function getLS(key, fallback){
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+function setLS(key, value){
+  localStorage.setItem(key, JSON.stringify(value));
+}
+/* PATCH END */
+
+/* PATCH START: utils histórico */
+function logAcao(tipo, descricao, meta){
+  try{
+    const arr = getLS('historicoAcoes', []);
+    const ev = { id: (crypto?.randomUUID?.() ?? String(Date.now())), tipo, descricao, meta, timestamp: new Date().toISOString() };
+    arr.unshift(ev);
+    setLS('historicoAcoes', arr);
+  }catch(e){ console.error('logAcao error', e); }
+}
+/* PATCH END */
+
+/* PATCH START: update helpers */
+function updateDenunciaCard(denuncia){
+  // try to find card element by dataset id
+  const card = document.querySelector(`.card-item[data-id="${denuncia.id}"]`);
+  if (!card) return;
+  const t = card.querySelector('.card-title');
+  const d = card.querySelector('.card-desc');
+  if (t) t.textContent = denuncia.playerName || '';
+  if (d) d.textContent = denuncia.descricao || '';
+}
+/* PATCH END */
+
+/* PATCH START: addToHistorico (enhanced) */
+function addToHistorico(tipo, mensagem, meta = null){
+    const username = localStorage.getItem('loggedInUser') || 'Sistema';
+    const novoEvento = { id: Date.now(), tipo, mensagem, usuario: username, timestamp: new Date().toISOString() };
+    historico.unshift(novoEvento);
+    localStorage.setItem('historico', JSON.stringify(historico));
+    initHistorico();
+    initFullHistorico();
+
+    // derive action type for historicoAcoes
+    let acao = 'INFO';
+    const lower = (mensagem || '').toLowerCase();
+    if (/(nova|criada|criado|criou|adicionado)/.test(lower)) acao = 'CRIAR';
+    else if (/(editada|editado|atualizada|alterado|editou)/.test(lower)) acao = 'EDITAR';
+    else if (/(exclu|remov)/.test(lower)) acao = 'EXCLUIR';
+
+    const acaoMeta = meta || { entidade: tipo };
+    logAcao(acao, mensagem, acaoMeta);
+}
+/* PATCH END */
+
+
+/* =========================
+   Login / logout / check
+   ========================= */
+function checkLogin(){
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser){
+        loginScreen.style.display = 'none';
+        appContainer.style.display = 'flex';
+        userInfo.textContent = `Olá, ${loggedInUser}`;
+        updateDashboardStats();
+        initDenunciasBoard();
+        initFichasList();
+        initHistorico();
+        initTagsUI();
+        loadBackground();
+        initVincularPlayerOptions();
+        startAllTimers(); // resume timers
+    }
+}
+loginBtn.addEventListener('click', ()=>{
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    if (validLogins[username] && validLogins[username] === password){
+        localStorage.setItem('loggedInUser', username);
+        loginError.style.display = 'none';
+        loginScreen.style.display = 'none';
+        appContainer.style.display = 'flex';
+        userInfo.textContent = `Olá, ${username}`;
+        addToHistorico('login', `Usuário ${username} fez login no sistema`);
+        showToast('Login realizado com sucesso','success');
+        updateDashboardStats();
+        initDenunciasBoard();
+        initFichasList();
+        initHistorico();
+        initTagsUI();
+        loadBackground();
+        initVincularPlayerOptions();
+        startAllTimers();
+    } else {
+        loginError.style.display = 'block';
+        showToast('Usuário ou senha incorretos','error');
+    }
+});
+logoutBtn.addEventListener('click', ()=>{
+    const username = localStorage.getItem('loggedInUser');
+    addToHistorico('logout', `Usuário ${username} fez logout do sistema`);
+    showToast('Logout realizado com sucesso', 'success');
+    localStorage.removeItem('loggedInUser');
+    appContainer.style.display = 'none';
+    loginScreen.style.display = 'flex';
+    usernameInput.value = '';
+    passwordInput.value = '';
+});
+
+/* =========================
+   Navegação de abas
+   ========================= */
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        navItems.forEach(n=>n.classList.remove('active'));
+        item.classList.add('active');
+        tabContents.forEach(tc => tc.classList.remove('active'));
+        document.getElementById(item.dataset.tab).classList.add('active');
+        if (item.dataset.tab === 'historico') initFullHistorico();
+    });
+});
+
+/* =========================
+   Tags UI (selecionáveis no modal)
+   ========================= */
+function initTagsUI(){
+    tagsContainer.innerHTML = '';
+    tags.forEach(tag => {
+        const el = document.createElement('div');
+        el.className = 'tag-item';
+        el.dataset.id = tag.id;
+        el.innerHTML = `<div class="tag-color" style="background:${tag.cor}"></div><span>${tag.nome}</span>`;
+        // toggle select on click in modal
+        el.addEventListener('click', (e)=>{
+            el.classList.toggle('selected');
+            // visual cue
+            if (el.classList.contains('selected')) el.style.boxShadow = '0 0 0 3px rgba(26,115,232,0.12)';
+            else el.style.boxShadow = 'none';
+        });
+        tagsContainer.appendChild(el);
+    });
+}
+
+/* =========================
+   Vínculo players options
+   ========================= */
+function initVincularPlayerOptions(){
+    vincularPlayer.innerHTML = '';
+    const emptyOption = document.createElement('option');
+    emptyOption.value = '';
+    emptyOption.textContent = 'Selecione um player para vincular';
+    vincularPlayer.appendChild(emptyOption);
+    fichas.forEach(ficha => {
+        const option = document.createElement('option');
+        option.value = ficha.id;
+        option.textContent = `${ficha.nome} (${ficha.steamId || 'Sem ID Steam'})`;
+        vincularPlayer.appendChild(option);
+    });
+}
+
+/* =========================
+   Upload/preview anexos (convert to base64 for persistence)
+   ========================= */
+function fileToBase64(file){
+    return new Promise((res, rej)=>{
+        const reader = new FileReader();
+        reader.onload = ()=> res({ name: file.name, type: file.type, data: reader.result });
+        reader.onerror = ()=> rej();
+        reader.readAsDataURL(file);
+    });
+}
+
+async function handleAnexosUpload(e, kind){
+    const files = e.target.files;
+    for (let i=0;i<files.length;i++){
+        const file = files[i];
+        const obj = await fileToBase64(file);
+        if (kind === 'image'){
+            anexosTemporarios.push({ type:'image', name: obj.name, data: obj.data });
+        } else {
+            // replay extension or generic file
+            anexosTemporarios.push({ type:'replay', name: obj.name, data: obj.data });
+        }
+    }
+    renderAnexosPreview();
+}
+
+function renderAnexosPreview(){
+    anexosPreview.innerHTML = '';
+    anexosTemporarios.forEach((a, idx)=>{
+        const div = document.createElement('div');
+        div.className = 'anexo-item';
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'anexo-remove';
+        removeBtn.innerHTML = '&times;';
+        removeBtn.addEventListener('click', ()=> {
+            anexosTemporarios.splice(idx,1);
+            renderAnexosPreview();
+        });
+
+        if (a.type === 'image'){
+            const img = document.createElement('img');
+            img.src = a.data;
+            img.alt = a.name;
+            img.addEventListener('click', ()=> openLightbox(a.data));
+            div.appendChild(img);
+        } else {
+            // replay -> show file icon and download action
+            const fileIcon = document.createElement('div');
+            fileIcon.className = 'file-icon';
+            fileIcon.innerHTML = `<i class="fas fa-file-download"></i>`;
+            fileIcon.title = 'Clique para baixar';
+            fileIcon.addEventListener('click', ()=> downloadBase64File(a.data, a.name));
+            div.appendChild(fileIcon);
+        }
+        div.appendChild(removeBtn);
+        anexosPreview.appendChild(div);
+    });
+}
+
+/* Download helper for base64 */
+function downloadBase64File(dataUrl, filename){
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+/* Lightbox */
+function openLightbox(src){
+    document.getElementById('lightboxImage').src = src;
+    lightboxModal.style.display = 'flex';
+}
+closeLightboxX.addEventListener('click', ()=> lightboxModal.style.display = 'none');
+
+/* Drag & drop */
+printsUpload.addEventListener('click', ()=> printsInput.click());
+printsInput.addEventListener('change', (e)=> handleAnexosUpload(e,'image'));
+replaysUpload.addEventListener('click', ()=> replaysInput.click());
+replaysInput.addEventListener('change', (e)=> handleAnexosUpload(e,'replay'));
+
+printsUpload.addEventListener('dragover', (e)=>{ e.preventDefault(); printsUpload.style.borderColor = 'var(--primary)'; });
+printsUpload.addEventListener('dragleave', ()=>{ printsUpload.style.borderColor = 'var(--border)'; });
+printsUpload.addEventListener('drop', (e)=>{ e.preventDefault(); printsUpload.style.borderColor = 'var(--border)'; if (e.dataTransfer.files.length) handleAnexosUpload({ target:{ files: e.dataTransfer.files }}, 'image'); });
+
+replaysUpload.addEventListener('dragover', (e)=>{ e.preventDefault(); replaysUpload.style.borderColor = 'var(--primary)'; });
+replaysUpload.addEventListener('dragleave', ()=>{ replaysUpload.style.borderColor = 'var(--border)'; });
+replaysUpload.addEventListener('drop', (e)=>{ e.preventDefault(); replaysUpload.style.borderColor = 'var(--border)'; if (e.dataTransfer.files.length) handleAnexosUpload({ target:{ files: e.dataTransfer.files }}, 'replay'); });
+
+/* =========================
+   Save / Edit Denúncia
+   ========================= */
+saveDenunciaBtn.addEventListener('click', () => {
+    const steamId = document.getElementById('steamId').value.trim();
+    const discordId = document.getElementById('discordId').value.trim();
+    const playerName = document.getElementById('playerName').value.trim();
+    const reporterName = document.getElementById('reporterName').value.trim();
+    const descricao = document.getElementById('denunciaDesc').value.trim();
+    const startTimer = document.getElementById('startTimer').checked;
+    const playersVinculados = Array.from(vincularPlayer.selectedOptions).map(o => o.value).filter(v => v);
+    const selectedTagEls = Array.from(tagsContainer.querySelectorAll('.tag-item.selected'));
+    const selectedTags = selectedTagEls.map(el => {
+        const tid = Number(el.dataset.id);
+        return tags.find(t=>t.id===tid);
+    }).filter(Boolean);
+
+    if (!steamId || !discordId || !playerName || !reporterName || !descricao){
+        showToast('Preencha todos os campos obrigatórios', 'error');
+        return;
+    }
+
+    if (editingDenunciaId){
+        // Edit existing
+        const d = denuncias.find(x => x.id === editingDenunciaId);
+        if (!d) { showToast('Denúncia não encontrada', 'error'); return; }
+        d.steamId = steamId;
+        d.discordId = discordId;
+        d.playerName = playerName;
+        d.reporterName = reporterName;
+        d.descricao = descricao;
+        d.playersVinculados = playersVinculados;
+        d.tags = selectedTags;
+        // anexos: append temporários
+        d.anexos = (d.anexos || []).concat(anexosTemporarios);
+        // timer handling
+        if (startTimer && !d.timerRunning){
+            d.timerRunning = true;
+            d.timerStart = Date.now();
+        }
+        if (!startTimer && d.timerRunning){
+            // if unchecked -> pause
+            d.timerRunning = false;
+            d.timerElapsed = (d.timerElapsed || 0) + (Date.now() - d.timerStart);
+            d.timerStart = null;
+        }
+        d.dataMovimento = new Date().toISOString();
+        addToHistorico('denuncia', `Denúncia editada: ${d.playerName}`, { entidade: 'denuncia', id: d.id });
+        showToast('Denúncia atualizada com sucesso','success');
+    } else {
+        // Create new
+        const nova = {
+            id: Date.now(),
+            steamId, discordId, playerName, reporterName, descricao,
+            anexos: anexosTemporarios.slice(), // copy
+            playersVinculados,
+            tags: selectedTags,
+            topico: 1, // Denuncias pegas
+            dataCriacao: new Date().toISOString(),
+            dataMovimento: null,
+            dataFinalizacao: null,
+            timerRunning: !!startTimer,
+            timerStart: startTimer ? Date.now() : null,
+            timerElapsed: 0 // ms
+        };
+        denuncias.push(nova);
+        addToHistorico('denuncia', `Nova denúncia criada: ${playerName}`, { entidade: 'denuncia', id: nova.id });
+        showToast('Denúncia criada com sucesso','success');
+    }
+
+    // persist
+    localStorage.setItem('denuncias', JSON.stringify(denuncias));
+    // reset form
+    resetDenunciaForm();
+    denunciaModal.style.display = 'none';
+    editingDenunciaId = null;
+    // update ui
+    initDenunciasBoard();
+    updateDashboardStats();
+    startAllTimers();
+});
+
+/* Cancelar */
+cancelDenunciaBtn.addEventListener('click', () => {
+    denunciaModal.style.display = 'none';
+    resetDenunciaForm();
+    editingDenunciaId = null;
+    showToast('Criação/edição de denúncia cancelada', 'info');
+});
+
+/* reset form */
+function resetDenunciaForm(){
+    document.getElementById('steamId').value = '';
+    document.getElementById('discordId').value = '';
+    document.getElementById('playerName').value = '';
+    document.getElementById('reporterName').value = '';
+    document.getElementById('denunciaDesc').value = '';
+    document.getElementById('startTimer').checked = false;
+    vincularPlayer.selectedIndex = 0;
+    anexosTemporarios = [];
+    anexosPreview.innerHTML = '';
+    // clear tag selections visuals
+    Array.from(tagsContainer.querySelectorAll('.tag-item')).forEach(el => { el.classList.remove('selected'); el.style.boxShadow = 'none'; });
+}
+
+/* Preenche modal para edição */
+function openDenunciaModalForEdit(id){
+    const d = denuncias.find(x=>x.id===id);
+    if (!d) { showToast('Denúncia não encontrada','error'); return; }
+    editingDenunciaId = id;
+    document.getElementById('denunciaModalTitle').textContent = 'Editar Denúncia';
+    document.getElementById('steamId').value = d.steamId || '';
+    document.getElementById('discordId').value = d.discordId || '';
+    document.getElementById('playerName').value = d.playerName || '';
+    document.getElementById('reporterName').value = d.reporterName || '';
+    document.getElementById('denunciaDesc').value = d.descricao || '';
+    if (d.timerRunning) document.getElementById('startTimer').checked = true;
+    else document.getElementById('startTimer').checked = false;
+
+    // vincular players
+    Array.from(vincularPlayer.options).forEach(opt => {
+        opt.selected = d.playersVinculados && d.playersVinculados.includes(opt.value);
+    });
+
+    // tags selection visuals
+    Array.from(tagsContainer.querySelectorAll('.tag-item')).forEach(el => {
+        const tid = Number(el.dataset.id);
+        if (d.tags && d.tags.find(t => t.id === tid)){
+            el.classList.add('selected'); el.style.boxShadow = '0 0 0 3px rgba(26,115,232,0.12)';
+        } else { el.classList.remove('selected'); el.style.boxShadow = 'none'; }
+    });
+
+    // preload anexosTemp with existing anexos to allow adding or removing
+    anexosTemporarios = (d.anexos || []).slice();
+    renderAnexosPreview();
+
+    denunciaModal.style.display = 'flex';
+}
+
+/* =========================
+   Delete Denuncia
+   ========================= */
+function deleteDenuncia(id){
+    const idx = denuncias.findIndex(d=>d.id===id);
+    if (idx === -1) return;
+    if (!confirm('Tem certeza que deseja excluir essa denúncia?')) return;
+    const nome = denuncias[idx].playerName || 'denúncia';
+    denuncias.splice(idx,1);
+    localStorage.setItem('denuncias', JSON.stringify(denuncias));
+    addToHistorico('denuncia', `Denúncia excluída: ${nome}`, { entidade: 'denuncia', id });
+    showToast('Denúncia excluída', 'success');
+    initDenunciasBoard();
+    updateDashboardStats();
+}
+
+/* =========================
+   Render Board / Columns / Cards
+   ========================= */
+function initDenunciasBoard(){
+    // ensure standard topics exist in topicos
+    const padrao = ['Denuncias pegas','denúncias em andamento','denuncias finalizadas','denuncias expiradas','bans aplicados'];
+    padrao.forEach((t, i) => {
+        if (!topicos[i]) topicos[i] = { id: i+1, titulo: t };
+        else topicos[i].titulo = t;
+        topicos[i].id = i+1;
+    });
+    // keep additional topics after index 5
+    // persist topics
+    localStorage.setItem('topicos', JSON.stringify(topicos));
+
+    // clear and build columns
+    denunciasBoard.innerHTML = '';
+    // for each topic show column
+    topicos.forEach(top => {
+        const col = document.createElement('div');
+        col.className = 'board-column';
+        col.dataset.topicoId = top.id;
+        col.innerHTML = `
+            <div class="column-header">
+                <div>
+                    <div class="column-title">${top.titulo}</div>
+                </div>
+                <div class="column-count" id="count-${top.id}">0</div>
+            </div>
+            <div class="column-cards" id="col-${top.id}"></div>
+        `;
+        denunciasBoard.appendChild(col);
+    });
+
+    // Place denuncias into columns
+    topicos.forEach(top => {
+        const container = document.getElementById(`col-${top.id}`);
+        container.innerHTML = '';
+        const items = denuncias.filter(d => d.topico === top.id);
+        document.getElementById(`count-${top.id}`).textContent = items.length;
+        items.forEach(d => {
+            const card = document.createElement('div');
+            card.className = 'card-item';
+            card.draggable = true;
+            card.dataset.id = d.id;
+
+            // tags at top
+            const tagsHtml = (d.tags || []).map(t => `<div class="card-tag" style="background:${t.cor}">${t.nome}</div>`).join('');
+            const playerInfoHtml = (d.playersVinculados || []).map(pid => {
+                const f = fichas.find(ff=>ff.id==pid);
+                if (!f) return '';
+                return `<div style="margin-top:6px; font-size:0.85rem; color:var(--text-light);"><strong>${f.nome}</strong> • ${f.steamId || '-'} • Str:${f.strikes||0} Ori:${f.orientacoes||0}</div>`;
+            }).join('');
+
+            // timer display -> compute display string
+            const timerDisplay = formatDenunciaTimer(d);
+
+            card.innerHTML = `
+                <div class="card-tags">${tagsHtml}</div>
+                <div class="card-content">
+                    <div class="card-title">${d.playerName}</div>
+                    <div class="card-desc">${d.descricao}</div>
+                    ${playerInfoHtml}
+                </div>
+                <div class="card-footer">
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <small>${new Date(d.dataCriacao).toLocaleString()}</small>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <div class="card-timer" id="timer-${d.id}">${timerDisplay}</div>
+                        <div class="card-actions">
+                            <button class="card-action-btn" title="Detalhes" data-action="details" data-id="${d.id}"><i class="fas fa-eye"></i></button>
+                            <button class="card-action-btn" title="Editar" data-action="edit" data-id="${d.id}"><i class="fas fa-edit"></i></button>
+                            <button class="card-action-btn" title="Excluir" data-action="delete" data-id="${d.id}"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // attach listeners for actions
+            setTimeout(()=>{ // allow DOM attach
+                card.querySelector('[data-action="details"]').addEventListener('click', ()=> showDenunciaDetails(d.id));
+                card.querySelector('[data-action="edit"]').addEventListener('click', ()=> openDenunciaModalForEdit(d.id));
+                card.querySelector('[data-action="delete"]').addEventListener('click', ()=> deleteDenuncia(d.id));
+            },0);
+
+            // drag events for future - simple move on drop in column (no external lib)
+            card.addEventListener('dragstart', (ev)=> {
+                ev.dataTransfer.setData('text/plain', d.id);
+            });
+
+            container.appendChild(card);
+
+            // render anexos thumbnails under card (optional) - small previews could be added here if desired
+        });
+    });
+
+    // attach column drop handlers
+    document.querySelectorAll('.board-column').forEach(col => {
+        col.addEventListener('dragover', (e)=> { e.preventDefault(); col.style.opacity = '0.9'; });
+        col.addEventListener('dragleave', ()=> { col.style.opacity = '1'; });
+        col.addEventListener('drop', (e)=> {
+            e.preventDefault();
+            col.style.opacity = '1';
+            const id = Number(e.dataTransfer.getData('text/plain'));
+            const d = denuncias.find(x=>x.id===id);
+            if (!d) return;
+            const newTopicoId = Number(col.dataset.topicoId);
+            const old = d.topico;
+            d.topico = newTopicoId;
+            d.dataMovimento = new Date().toISOString();
+            // if moved to finalizadas set dataFinalizacao
+            if (newTopicoId === 3 && !d.dataFinalizacao){
+                d.dataFinalizacao = new Date().toISOString();
+            }
+            // if moved out of finalizadas clear finalizacao
+            if (old === 3 && newTopicoId !== 3){
+                d.dataFinalizacao = null;
+            }
+            localStorage.setItem('denuncias', JSON.stringify(denuncias));
+            addToHistorico('denuncia', `Denúncia movida de tópico ${old} para ${newTopicoId}`);
+            initDenunciasBoard();
+            updateDashboardStats();
+        });
+    });
+}
+
+/* =========================
+   Format timer display and timer runtime
+   ========================= */
+function formatDuration(ms){
+    if (!ms && ms !== 0) return '—';
+    const total = Math.max(0, Math.floor(ms/1000)); // seconds
+    const h = Math.floor(total/3600);
+    const m = Math.floor((total%3600)/60);
+    const s = total%60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function formatDenunciaTimer(d){
+    const elapsed = (d.timerElapsed || 0) + (d.timerRunning && d.timerStart ? (Date.now() - d.timerStart) : 0);
+    if (d.timerRunning || elapsed>0) return formatDuration(elapsed);
+    return '—';
+}
+
+let timerInterval = null;
+function startAllTimers(){
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(()=>{
+        denuncias.forEach(d => {
+            if (d.timerRunning && d.timerStart){
+                const el = document.getElementById(`timer-${d.id}`);
+                if (el) el.textContent = formatDenunciaTimer(d);
+            } else {
+                const el = document.getElementById(`timer-${d.id}`);
+                if (el) el.textContent = formatDenunciaTimer(d);
+            }
+        });
+    }, 1000);
+}
+
+/* =========================
+   Estatísticas (dashboard)
+   - counts based on denuncias data
+   - tempo médio baseado na diferença entre mover de pegadas -> finalizadas
+   ========================= */
+function updateDashboardStats(){
+    // last month & current month counts for finalizadas
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    let lastMonthCount = 0, currentMonthCount = 0, totalFinalizadas = 0;
+    // we'll compute durations for those that have both dataMovimento (when picked) and dataFinalizacao
+    const durations = [];
+
+    denuncias.forEach(d => {
+        if (d.dataFinalizacao){
+            totalFinalizadas++;
+            const dt = new Date(d.dataFinalizacao);
+            if (dt.getFullYear() === currentYear && dt.getMonth() === currentMonth) currentMonthCount++;
+            const lastMonth = new Date(now.getFullYear(), now.getMonth()-1, 1);
+            if (dt >= new Date(lastMonth.getFullYear(), lastMonth.getMonth(),1) && dt < new Date(now.getFullYear(), now.getMonth(),1)) lastMonthCount++;
+            // compute duration: we rely on d.pickedAt (or dataMovimento when moved from pegadas) and dataFinalizacao
+            // Assumption: d.pickedTimestamp stored when moved from topic 1 to another - if not available try to infer from dataCriacao
+            const picked = d.pickedTimestamp || d.dataMovimento || d.dataCriacao;
+            if (picked){
+                const start = new Date(picked);
+                const end = new Date(d.dataFinalizacao);
+                const diff = end - start;
+                if (!isNaN(diff) && diff>0) durations.push(diff);
+            }
+        }
+    });
+
+    document.getElementById('lastMonth').textContent = lastMonthCount;
+    document.getElementById('currentMonth').textContent = currentMonthCount;
+    document.getElementById('totalDenuncias').textContent = totalFinalizadas;
+
+    if (durations.length){
+        const avg = durations.reduce((a,b)=>a+b,0)/durations.length;
+        document.getElementById('avgTime').textContent = formatDuration(avg);
+    } else {
+        document.getElementById('avgTime').textContent = '—';
+    }
+}
+
+/* =========================
+   Histórico
+   ========================= */
+function initHistorico(){
+    historyList.innerHTML = '';
+    const recentes = historico.slice(0,5);
+    if (recentes.length === 0) { historyList.innerHTML = '<p>Nenhuma atividade recente.</p>'; return; }
+    recentes.forEach(evento => {
+        const item = document.createElement('div'); item.className = 'history-item';
+        let icon = 'fas fa-info-circle';
+        if (evento.tipo==='login') icon='fas fa-sign-in-alt';
+        if (evento.tipo==='logout') icon='fas fa-sign-out-alt';
+        if (evento.tipo==='denuncia') icon='fas fa-exclamation-circle';
+        if (evento.tipo==='ficha') icon='fas fa-user-edit';
+        if (evento.tipo==='anotacao') icon='fas fa-sticky-note';
+        if (evento.tipo==='config') icon='fas fa-cog';
+        const data = new Date(evento.timestamp);
+        const dataFormatada = data.toLocaleString('pt-BR');
+        item.innerHTML = `<div class="history-icon"><i class="${icon}"></i></div><div class="history-content"><div class="history-title">${evento.mensagem}</div><div class="history-time">${dataFormatada} • Por ${evento.usuario}</div></div>`;
+        historyList.appendChild(item);
+    });
+}
+function initFullHistorico(){
+    fullHistoryList.innerHTML = '';
+    if (historico.length === 0){ fullHistoryList.innerHTML = '<p>Nenhuma atividade registrada.</p>'; return; }
+    historico.forEach(evento => {
+        const item = document.createElement('div'); item.className='history-item';
+        let icon = 'fas fa-info-circle';
+        if (evento.tipo==='login') icon='fas fa-sign-in-alt';
+        if (evento.tipo==='logout') icon='fas fa-sign-out-alt';
+        if (evento.tipo==='denuncia') icon='fas fa-exclamation-circle';
+        if (evento.tipo==='ficha') icon='fas fa-user-edit';
+        if (evento.tipo==='anotacao') icon='fas fa-sticky-note';
+        if (evento.tipo==='config') icon='fas fa-cog';
+        const data = new Date(evento.timestamp);
+        const dataFormatada = data.toLocaleString('pt-BR');
+        item.innerHTML = `<div class="history-icon"><i class="${icon}"></i></div><div class="history-content"><div class="history-title">${evento.mensagem}</div><div class="history-time">${dataFormatada} • Por ${evento.usuario}</div></div>`;
+        fullHistoryList.appendChild(item);
+    });
+}
+
+/* =========================
+   Fichas management (create/edit/list)
+   ========================= */
+let currentStrikes = 0, currentOrientacoes = 0;
+const strikesCount = document.getElementById('strikesCount');
+const orientacoesCount = document.getElementById('orientacoesCount');
+
+document.getElementById('addStrikeBtn').addEventListener('click', ()=> { currentStrikes++; strikesCount.textContent = currentStrikes; });
+document.getElementById('removeStrikeBtn').addEventListener('click', ()=> { if (currentStrikes>0) currentStrikes--; strikesCount.textContent = currentStrikes; });
+document.getElementById('addOrientacaoBtn').addEventListener('click', ()=> { currentOrientacoes++; orientacoesCount.textContent = currentOrientacoes; });
+document.getElementById('removeOrientacaoBtn').addEventListener('click', ()=> { if (currentOrientacoes>0) currentOrientacoes--; orientacoesCount.textContent = currentOrientacoes; });
+
+saveFichaBtn.addEventListener('click', ()=>{
+    const steamId = document.getElementById('fichaSteamId').value.trim();
+    const discordId = document.getElementById('fichaDiscordId').value.trim();
+    const playerName = document.getElementById('fichaPlayerName').value.trim();
+    const comportamento = document.getElementById('fichaBehavior').value.trim();
+
+    if (!steamId || !discordId || !playerName || !comportamento){
+        showToast('Preencha todos os campos obrigatórios', 'error'); return;
+    }
+
+    if (editingFichaId){
+        // update
+        const f = fichas.find(x=>x.id===editingFichaId);
+        if (!f){ showToast('Ficha não encontrada', 'error'); return; }
+        f.steamId = steamId; f.discordId = discordId; f.nome = playerName; f.comportamento = comportamento;
+        f.strikes = currentStrikes; f.orientacoes = currentOrientacoes;
+        addToHistorico('ficha', `Ficha editada: ${f.nome}`, { entidade: 'player', id: f.id });
+        showToast('Ficha atualizada com sucesso','success');
+    } else {
+        // new
+        const nova = { id: Date.now(), steamId, discordId, nome: playerName, comportamento, strikes: currentStrikes, orientacoes: currentOrientacoes, dataCriacao: new Date().toISOString() };
+        fichas.push(nova);
+        addToHistorico('ficha', `Nova ficha criada: ${playerName}`, { entidade: 'player', id: nova.id });
+        showToast('Ficha criada com sucesso','success');
+    }
+
+    localStorage.setItem('fichas', JSON.stringify(fichas));
+    editingFichaId = null;
+    resetFichaForm();
+    fichaModal.style.display = 'none';
+    initFichasList();
+    initVincularPlayerOptions();
+});
+
+function resetFichaForm(){
+    document.getElementById('fichaSteamId').value = '';
+    document.getElementById('fichaDiscordId').value = '';
+    document.getElementById('fichaPlayerName').value = '';
+    document.getElementById('fichaBehavior').value = '';
+    currentStrikes = 0; currentOrientacoes = 0;
+    strikesCount.textContent = '0'; orientacoesCount.textContent = '0';
+}
+
+function openFichaModalForEdit(id){
+    const f = fichas.find(x=>x.id===id);
+    if (!f) { showToast('Ficha não encontrada','error'); return; }
+    editingFichaId = id;
+    document.getElementById('fichaSteamId').value = f.steamId || '';
+    document.getElementById('fichaDiscordId').value = f.discordId || '';
+    document.getElementById('fichaPlayerName').value = f.nome || '';
+    document.getElementById('fichaBehavior').value = f.comportamento || '';
+    currentStrikes = f.strikes || 0; currentOrientacoes = f.orientacoes || 0;
+    strikesCount.textContent = String(currentStrikes); orientacoesCount.textContent = String(currentOrientacoes);
+    fichaModal.style.display = 'flex';
+}
+
+/* players list rendering with button to show linked denuncias */
+
+/* PATCH START: initFichasList with delete action */
+function initFichasList(){
+    playersList.innerHTML = '';
+    if (!fichas.length) { playersList.innerHTML = '<p>Nenhuma ficha cadastrada.</p>'; return; }
+    fichas.forEach(f => {
+        const card = document.createElement('div'); card.className = 'player-card';
+        card.innerHTML = `
+            <div class="player-actions">
+                <button class="card-action-btn" data-action="view-links" data-id="${f.id}" title="Ver denúncias"><i class="fas fa-link"></i></button>
+                <button class="card-action-btn" data-action="edit-ficha" data-id="${f.id}" title="Editar ficha"><i class="fas fa-edit"></i></button>
+                <button class="card-action-btn" data-action="delete-player" data-id="${f.id}" title="Excluir jogador"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="player-id">Steam: ${f.steamId} • Discord: ${f.discordId}</div>
+            <div class="player-name">${f.nome}</div>
+            <div class="player-behavior">${f.comportamento}</div>
+            <div class="player-stats">
+                <div class="stat-badge"><div class="stat-badge-value">${f.strikes||0}</div><div class="stat-badge-label">Strikes</div></div>
+                <div class="stat-badge"><div class="stat-badge-value">${f.orientacoes||0}</div><div class="stat-badge-label">Orientações</div></div>
+            </div>
+        `;
+        playersList.appendChild(card);
+
+        // actions
+        setTimeout(()=> {
+            const viewBtn = card.querySelector('[data-action="view-links"]');
+            const editBtn = card.querySelector('[data-action="edit-ficha"]');
+            const delBtn = card.querySelector('[data-action="delete-player"]');
+            if (viewBtn) viewBtn.addEventListener('click', ()=> showPlayerLinkedDenuncias(f.id));
+            if (editBtn) editBtn.addEventListener('click', ()=> openFichaModalForEdit(f.id));
+            if (delBtn) delBtn.addEventListener('click', ()=> deletePlayer(f.id));
+        },0);
+    });
+}
+/* PATCH END */
+
+
+/* PATCH START: deletePlayer */
+function deletePlayer(id){
+  const idx = fichas.findIndex(f=>f.id===id);
+  if (idx === -1) { showToast('Ficha não encontrada','error'); return; }
+  const name = fichas[idx].nome || 'player';
+  if (!confirm(`Tem certeza que deseja excluir a ficha de ${name}? Esta ação removerá o vínculo das denúncias também.`)) return;
+  // remove from fichas
+  fichas.splice(idx,1);
+  localStorage.setItem('fichas', JSON.stringify(fichas));
+  // keep players key in sync
+  try{ setLS('players', fichas); }catch(e){}
+  // remove vinculos nas denuncias
+  let changed = false;
+  denuncias.forEach(d => {
+    if (d.playersVinculados && d.playersVinculados.length){
+      const before = (d.playersVinculados||[]).slice();
+      d.playersVinculados = (d.playersVinculados||[]).filter(p => String(p) !== String(id));
+      if (d.playersVinculados.length !== before.length) changed = true;
+    }
+  });
+  if (changed) localStorage.setItem('denuncias', JSON.stringify(denuncias));
+  initFichasList();
+  initVincularPlayerOptions();
+  initDenunciasBoard();
+  addToHistorico('ficha', `Ficha excluída: ${name}`, { entidade: 'player', id });
+  showToast('Ficha excluída com sucesso','success');
+}
+/* PATCH END */
+
+/* show popup with list of denuncias linked to player */
+function showPlayerLinkedDenuncias(playerId){
+    const f = fichas.find(x=>x.id===playerId);
+    if (!f) return;
+    const linked = denuncias.filter(d => d.playersVinculados && d.playersVinculados.includes(String(playerId)));
+    let html = `<div style="padding:10px;"><h4>Player: ${f.nome}</h4><p>${linked.length} denúncias vinculadas</p>`;
+    linked.forEach(d => {
+        html += `<div style="border:1px solid var(--border); padding:10px; margin:8px 0; border-radius:6px;">
+            <div style="font-weight:600">${d.playerName}</div>
+            <div style="font-size:0.9rem; color:var(--text-light)">${d.descricao}</div>
+            <div style="font-size:0.8rem; color:var(--text-light)">${new Date(d.dataCriacao).toLocaleString()}</div>
+            <div style="margin-top:8px;"><button class="btn small" onclick="openDenunciaDetailsFromPlayer(${d.id})">Abrir detalhes</button></div>
+        </div>`;
+    });
+    html += '</div>';
+    denunciaDetailsContent.innerHTML = html;
+    denunciaDetailsModal.style.display = 'flex';
+}
+
+/* helper to open details from player list */
+function openDenunciaDetailsFromPlayer(id){
+    denunciaDetailsModal.style.display = 'none';
+    showDenunciaDetails(id);
+}
+
+/* =========================
+   Show details of a denuncia (modal)
+   ========================= */
+function showDenunciaDetails(id){
+    const d = denuncias.find(x=>x.id===id);
+    if (!d) return;
+    let anexosHtml = '';
+    (d.anexos||[]).forEach(a => {
+        if (a.type === 'image') anexosHtml += `<div style="display:inline-block;margin:5px;"><img src="${a.data}" alt="${a.name}" style="width:120px;height:80px;object-fit:cover;border-radius:6px;cursor:pointer;" onclick="openLightbox('${a.data}')"></div>`;
+        else anexosHtml += `<div style="display:inline-block;margin:5px;"><button class="btn" onclick="downloadBase64File('${a.data}','${a.name}')"><i class="fas fa-file-download"></i> ${a.name}</button></div>`;
+    });
+
+    const playersHtml = (d.playersVinculados||[]).map(pid => {
+        const ff = fichas.find(x=>x.id==pid);
+        if (!ff) return `<div>Player vinculado não encontrado</div>`;
+        return `<div style="padding:8px;border:1px solid var(--border);border-radius:6px;margin-bottom:6px;">
+            <div style="font-weight:600">${ff.nome}</div>
+            <div style="font-size:0.9rem;color:var(--text-light)">Steam: ${ff.steamId} • Discord: ${ff.discordId}</div>
+            <div style="font-size:0.85rem;color:var(--text-light)">Strikes: ${ff.strikes||0} • Orientações: ${ff.orientacoes||0}</div>
+        </div>`;
+    }).join('');
+
+    const tagsHtml = (d.tags||[]).map(t=>`<span style="display:inline-block;padding:4px 8px;background:${t.cor};color:#fff;border-radius:6px;margin-right:6px;">${t.nome}</span>`).join('');
+    const timerHtml = formatDenunciaTimer(d);
+
+    denunciaDetailsContent.innerHTML = `
+        <div class="detail-item"><div class="detail-label">Player Denunciado</div><div class="detail-value">${d.playerName}</div></div>
+        <div class="detail-item"><div class="detail-label">ID Steam</div><div class="detail-value">${d.steamId}</div></div>
+        <div class="detail-item"><div class="detail-label">ID Discord</div><div class="detail-value">${d.discordId}</div></div>
+        <div class="detail-item"><div class="detail-label">Denunciante</div><div class="detail-value">${d.reporterName}</div></div>
+        <div class="detail-item"><div class="detail-label">Descrição</div><div class="detail-value">${d.descricao}</div></div>
+        <div class="detail-item"><div class="detail-label">Etiquetas</div><div class="detail-value">${tagsHtml || '—'}</div></div>
+        <div class="detail-item"><div class="detail-label">Players vinculados</div><div class="detail-value">${playersHtml || '—'}</div></div>
+        <div class="detail-item"><div class="detail-label">Anexos</div><div class="detail-value">${anexosHtml || '—'}</div></div>
+        <div class="detail-item"><div class="detail-label">Timer</div><div class="detail-value">${timerHtml}</div></div>
+        <div style="margin-top:10px; display:flex; gap:8px;">
+            <button class="btn" onclick="openDenunciaModalForEdit(${d.id})">Editar</button>
+            <button class="btn" onclick="deleteDenuncia(${d.id})" style="background:var(--danger)">Excluir</button>
+        </div>
+    `;
+    denunciaDetailsModal.style.display = 'flex';
+}
+
+/* =========================
+   Tags create
+   ========================= */
+newTagBtn.addEventListener('click', ()=>{
+    document.getElementById('tagName').value = '';
+    document.getElementById('tagColor').value = '#1a73e8';
+    tagModal.style.display = 'flex';
+});
+saveTagBtn.addEventListener('click', ()=>{
+    const nome = document.getElementById('tagName').value.trim();
+    const cor = document.getElementById('tagColor').value;
+    if (!nome){ showToast('Digite o nome da etiqueta','error'); return; }
+    const nova = { id: Date.now(), nome, cor };
+    tags.push(nova);
+    localStorage.setItem('tags', JSON.stringify(tags));
+    addToHistorico('config', `Nova etiqueta criada: ${nome}`);
+    showToast('Etiqueta criada com sucesso','success');
+    tagModal.style.display = 'none';
+    initTagsUI();
+});
+
+/* =========================
+   Topics create/manage
+   ========================= */
+newTopicoBtn.addEventListener('click', ()=>{
+    const titulo = prompt('Digite o nome do novo tópico:');
+    if (!titulo) return;
+    const novo = { id: Date.now(), titulo };
+    topicos.push(novo);
+    localStorage.setItem('topicos', JSON.stringify(topicos));
+    addToHistorico('config', `Novo tópico criado: ${titulo}`);
+    showToast('Tópico criado com sucesso','success');
+    initDenunciasBoard();
+});
+manageTopicosBtn.addEventListener('click', ()=> {
+    initTopicosList();
+    manageTopicosModal.style.display = 'flex';
+});
+function initTopicosList(){
+    topicosList.innerHTML = '';
+    topicos.forEach((t, idx) => {
+        const isPadrao = idx < 5;
+        const div = document.createElement('div'); div.className='history-item';
+        div.innerHTML = `<div class="history-content"><div class="history-title">${t.titulo}</div><div class="history-time">${denuncias.filter(d=>d.topico===t.id).length} denúncias</div></div>`;
+        if (!isPadrao){
+            const actions = document.createElement('div');
+            actions.innerHTML = `<button class="card-action-btn edit-topico" data-id="${t.id}"><i class="fas fa-edit"></i></button><button class="card-action-btn delete-topico" data-id="${t.id}"><i class="fas fa-trash"></i></button>`;
+            div.appendChild(actions);
+        }
+        topicosList.appendChild(div);
+    });
+    setTimeout(()=>{
+        document.querySelectorAll('.edit-topico').forEach(btn => btn.addEventListener('click', (e)=>{
+            const id = Number(e.currentTarget.dataset.id);
+            const top = topicos.find(x=>x.id===id);
+            const novo = prompt('Editar nome do tópico:', top.titulo);
+            if (novo && novo.trim()!==''){ top.titulo = novo.trim(); localStorage.setItem('topicos', JSON.stringify(topicos)); addToHistorico('config', `Tópico editado: ${novo}`); showToast('Tópico editado','success'); initDenunciasBoard(); initTopicosList(); }
+        }));
+        document.querySelectorAll('.delete-topico').forEach(btn => btn.addEventListener('click', (e)=>{
+            const id = Number(e.currentTarget.dataset.id);
+            const top = topicos.find(x=>x.id===id);
+            if (!confirm(`Excluir tópico "${top.titulo}"? As denúncias serão movidas para o primeiro tópico.`)) return;
+            denuncias.forEach(d => { if (d.topico === id) d.topico = 1; });
+            topicos = topicos.filter(x=>x.id!==id);
+            localStorage.setItem('topicos', JSON.stringify(topicos));
+            localStorage.setItem('denuncias', JSON.stringify(denuncias));
+            addToHistorico('config', `Tópico excluído: ${top.titulo}`);
+            showToast('Tópico excluído','success');
+            initDenunciasBoard(); initTopicosList(); updateDashboardStats();
+        }));
+    },50);
+}
+
+/* =========================
+   Background upload (cover board area)
+   ========================= */
+bgUpload.addEventListener('click', ()=> bgInput.click());
+bgInput.addEventListener('change', handleBackgroundUpload);
+
+async function handleBackgroundUpload(e){
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!['image/jpeg','image/jpg','image/png'].includes(file.type)) { showToast('Apenas JPG/JPEG/PNG permitidos','error'); return; }
+    const b = await fileToBase64(file);
+    // apply to :root variable and also set preview
+    document.documentElement.style.setProperty('--denuncias-bg', `url('${b.data}')`);
+    // also set background on #denuncias container and on denunciasBoard
+    document.getElementById('denuncias').style.background = `url('${b.data}') center/cover no-repeat`;
+    localStorage.setItem('denunciasBackground', b.data);
+    bgPreview.innerHTML = `<div class="anexo-item"><img src="${b.data}" style="width:120px;height:80px;object-fit:cover;border-radius:6px;"></div>`;
+    addToHistorico('config', 'Background do quadro de denúncias atualizado');
+    showToast('Background aplicado no quadro de denúncias','success');
+}
+
+function loadBackground(){
+    const data = localStorage.getItem('denunciasBackground');
+    if (data){
+        document.documentElement.style.setProperty('--denuncias-bg', `url('${data}')`);
+        document.getElementById('denuncias').style.background = `url('${data}') center/cover no-repeat`;
+        bgPreview.innerHTML = `<div class="anexo-item"><img src="${data}" style="width:120px;height:80px;object-fit:cover;border-radius:6px;"></div>`;
+    }
+}
+
+document.getElementById('restoreBgBtn').addEventListener('click', ()=>{
+    localStorage.removeItem('denunciasBackground');
+    document.documentElement.style.setProperty('--denuncias-bg','none');
+    document.getElementById('denuncias').style.background = 'none';
+    bgPreview.innerHTML = '';
+    addToHistorico('config','Background do quadro de denúncias restaurado');
+    showToast('Background restaurado para o padrão','success');
+});
+
+/* =========================
+   Theme select handler
+   ========================= */
+themeSelect.addEventListener('change', ()=>{
+    const theme = themeSelect.value;
+    if (theme === 'blue') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('selectedTheme', theme);
+    addToHistorico('config','Tema visual alterado');
+    showToast('Tema alterado com sucesso','success');
+});
+
+/* load selected theme on start */
+function loadSelectedTheme(){
+    const s = localStorage.getItem('selectedTheme') || 'blue';
+    themeSelect.value = s;
+    if (s === 'blue') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', s);
+}
+
+/* =========================
+   New Denuncia / New Ficha buttons open modals
+   ========================= */
+newDenunciaBtn.addEventListener('click', openDenunciaModal);
+newDenunciaBoardBtn.addEventListener('click', openDenunciaModal);
+function openDenunciaModal(){
+    editingDenunciaId = null;
+    document.getElementById('denunciaModalTitle').textContent = 'Nova Denúncia';
+    resetDenunciaForm();
+    initTagsUI();
+    initVincularPlayerOptions();
+    denunciaModal.style.display = 'flex';
+}
+
+newFichaBtn.addEventListener('click', openFichaModal);
+newFichaBoardBtn.addEventListener('click', openFichaModal);
+function openFichaModal(){
+    editingFichaId = null;
+    resetFichaForm();
+    fichaModal.style.display = 'flex';
+}
+
+/* modals close buttons */
+[closeDenunciaX, closeFichaX, closeTagX, closeManageX, closeDetailsX].forEach(btn => {
+    btn && btn.addEventListener('click', ()=> {
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        resetDenunciaForm(); resetFichaForm();
+        editingDenunciaId = null; editingFichaId = null;
+    });
+});
+
+
+/* PATCH START: modal safe close handlers */
+document.addEventListener('click', function(e){
+  const el = e.target;
+  try{
+    if (!el) return;
+    // common modal close triggers: buttons with class 'modal-close', elements with data-close-modal or [data-close]="true"
+    if (el.classList && (el.classList.contains('modal-close') || el.dataset && el.dataset.close === 'true' || el.matches('[data-close-modal]')) ){
+      const modal = el.closest('.modal');
+      if (modal){
+        modal.style.display = 'none';
+        resetDenunciaForm(); resetFichaForm();
+        editingDenunciaId = null; editingFichaId = null;
+      }
+    }
+  }catch(e){/* ignore */ }
+});
+// Escape to close modals
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape'){
+    document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    resetDenunciaForm(); resetFichaForm();
+    editingDenunciaId = null; editingFichaId = null;
+  }
+});
+/* PATCH END */
+/* close by clicking outside */
+window.addEventListener('click', (e)=> {
+    if (e.target.classList.contains('modal')){
+        e.target.style.display = 'none';
+        resetDenunciaForm(); resetFichaForm();
+        editingDenunciaId = null; editingFichaId = null;
+    }
+});
+
+/* =========================
+   Search steam & refresh
+   ========================= */
+searchSteamBtn.addEventListener('click', ()=>{
+    const steam = document.getElementById('steamId').value.trim();
+    if (!steam){ showToast('Digite um ID Steam para pesquisar','error'); return; }
+    window.open(`https://www.steamidfinder.com/lookup/${steam}/`, '_blank');
+});
+
+refreshBtn.addEventListener('click', ()=> location.reload());
+
+/* =========================
+   Start app
+   ========================= */
+
+/* PATCH START: sync players LS */
+function syncPlayersLS(){
+    try{
+        const playersLS = getLS('players', null);
+        if (playersLS && Array.isArray(playersLS)){
+            if (!fichas.length){
+                fichas = playersLS;
+                setLS('fichas', fichas);
+            } else {
+                // mirror fichas to players key
+                setLS('players', fichas);
+            }
+        } else {
+            setLS('players', fichas);
+        }
+    }catch(e){ console.error('syncPlayersLS', e); }
+}
+/* PATCH END */
+
+function init(){
+    checkLogin();
+    initTagsUI();
+    loadSelectedTheme();
+    syncPlayersLS();
+    initVincularPlayerOptions();
+    initFichasList();
+    initDenunciasBoard();
+    initHistorico();
+    initFullHistorico();
+    startAllTimers();
+}
+init();
+
+/* start timers for any running denuncias - ensure periodic update continues */
+startAllTimers();
+
+</script>
+</body>
+</html>
