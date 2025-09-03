@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -290,6 +292,19 @@
   background-repeat: no-repeat;
 }
 /* PATCH END */
+
+/* PATCH START: expandir quadro denuncias e ajustar scroll */
+.board {
+  min-height: 500px;            /* expandido */
+  align-items: flex-start;      /* colunas no topo */
+  overflow-y: hidden;           /* scroll só horizontal */
+}
+#denuncias {
+  overflow-y: auto;             /* scroll mais embaixo */
+  padding-bottom: 40px;         /* espaço p/ barra de rolagem */
+}
+/* PATCH END */
+
 </style>
 </head>
 <body>
@@ -819,6 +834,63 @@ function addToHistorico(tipo, mensagem, meta = null){
 }
 /* PATCH END */
 
+/* PATCH START: editar nome de tópico */
+function enableEditableTopicos() {
+  document.querySelectorAll('.board-column .column-title').forEach(titleEl => {
+    titleEl.contentEditable = "true";
+    titleEl.addEventListener('blur', () => {
+      const col = titleEl.closest('.board-column');
+      const id = Number(col.dataset.topicoId);
+      const topico = topicos.find(t => t.id === id);
+      if (topico) {
+        topico.titulo = titleEl.textContent.trim();
+        localStorage.setItem('topicos', JSON.stringify(topicos));
+        addToHistorico('topico', `Tópico renomeado para "${topico.titulo}"`, { entidade:'topico', id });
+      }
+    });
+  });
+}
+/* PATCH END */
+
+
+/* PATCH START: arrastar e soltar tópicos (corrigido para mudar ordem no DOM) */
+function enableDragTopicos() {
+  const board = document.querySelector('.board');
+  const cols = board.querySelectorAll('.board-column');
+  cols.forEach(col => {
+    col.draggable = true;
+    col.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', col.dataset.topicoId);
+      col.classList.add('dragging');
+    });
+    col.addEventListener('dragend', () => {
+      col.classList.remove('dragging');
+    });
+    col.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = board.querySelector('.dragging');
+      if (!dragging || dragging === col) return;
+      const rect = col.getBoundingClientRect();
+      const offset = e.clientX - rect.left - rect.width / 2;
+      if (offset > 0) {
+        board.insertBefore(dragging, col.nextSibling);
+      } else {
+        board.insertBefore(dragging, col);
+      }
+    });
+    col.addEventListener('drop', e => {
+      e.preventDefault();
+      const draggedId = Number(e.dataTransfer.getData('text/plain'));
+      const newOrder = Array.from(board.querySelectorAll('.board-column')).map(c => Number(c.dataset.topicoId));
+      topicos.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+      localStorage.setItem('topicos', JSON.stringify(topicos));
+      addToHistorico('topico', `Tópicos reordenados`, { entidade:'topico' });
+    });
+  });
+}
+/* PATCH END */
+
+
 
 /* =========================
    Login / logout / check
@@ -1267,6 +1339,9 @@ function initDenunciasBoard(){
             // render anexos thumbnails under card (optional) - small previews could be added here if desired
         });
     });
+
+    enableEditableTopicos();
+    enableDragTopicos();
 
     // attach column drop handlers
     document.querySelectorAll('.board-column').forEach(col => {
