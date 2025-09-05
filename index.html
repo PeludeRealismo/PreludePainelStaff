@@ -1,6 +1,9 @@
 
 
 
+
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -661,6 +664,9 @@
             <div class="modal-body" style="display:flex; justify-content:center; align-items:center; padding:40px;">
                 <img id="lightboxImage" src="" alt="Preview" style="max-width:100%; max-height:80vh; border-radius:8px;" />
             </div>
+            <div class="lightbox-footer">
+                <button class="btn" id="closeLightboxBtn" style="background:var(--text-light);">Fechar</button>
+            </div>
         </div>
     </div>
 
@@ -1121,8 +1127,8 @@ saveDenunciaBtn.addEventListener('click', () => {
         d.descricao = descricao;
         d.playersVinculados = playersVinculados;
         d.tags = selectedTags;
-        // anexos: append temporários
-        d.anexos = (d.anexos || []).concat(anexosTemporarios);
+        /* PATCH: sobrescreve anexos em vez de concatenar */
+        d.anexos = anexosTemporarios.slice(); // FIX: sobrescreve sem duplicar
         // timer handling
         if (startTimer && !d.timerRunning){
             d.timerRunning = true;
@@ -1943,6 +1949,74 @@ init();
 
 /* start timers for any running denuncias - ensure periodic update continues */
 startAllTimers();
+
+
+/* PATCH START: fechar modais de tópicos/etiquetas de forma funcional */
+document.getElementById('closeManageX')?.addEventListener('click', () => {
+  manageTopicosModal.style.display = 'none';
+});
+document.getElementById('closeManageTopicosBtn')?.addEventListener('click', () => {
+  manageTopicosModal.style.display = 'none';
+});
+
+document.getElementById('closeTagX')?.addEventListener('click', () => {
+  tagModal.style.display = 'none';
+});
+document.getElementById('cancelTagBtn')?.addEventListener('click', () => {
+  tagModal.style.display = 'none';
+});
+/* PATCH END */
+
+
+/* PATCH START: fechar lightbox sem remover anexos */
+closeLightboxX?.addEventListener('click', () => {
+  lightboxModal.style.display = 'none';
+  // FIX: anexos permanecem visíveis nos cards
+  renderAnexosPreview();
+});
+
+/* Novo botão fechar no rodapé do lightbox */
+const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+closeLightboxBtn?.addEventListener('click', () => {
+  lightboxModal.style.display = 'none';
+  // não limpar src, apenas esconder o modal
+});
+/* PATCH END */
+
+
+/* PATCH START: evitar anexos duplicados no card */
+function updateDenunciaCard(denuncia) {
+  const card = document.querySelector(`[data-denuncia-id="${denuncia.id}"]`);
+  if (!card) return;
+
+  const t = card.querySelector('[data-field="titulo"]');
+  const d = card.querySelector('[data-field="descricao"]');
+  if (t) t.textContent = denuncia.titulo;
+  if (d) d.textContent = denuncia.descricao;
+
+  const anexosContainer = card.querySelector('.anexos-container');
+  if (anexosContainer) {
+    anexosContainer.innerHTML = ""; // limpa anexos antigos
+    denuncia.anexos.forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.classList.add('miniatura-anexo');
+      img.addEventListener('click', () => abrirLightbox(src));
+      anexosContainer.appendChild(img);
+    });
+  }
+}
+/* PATCH END */
+
+
+/* PATCH START: fechar lightbox sem apagar imagem */
+if (typeof closeLightboxX !== 'undefined' && closeLightboxX){
+  closeLightboxX.addEventListener('click', () => {
+    lightboxModal.style.display = 'none';
+    // não limpar src -> mantém imagem no card
+  });
+}
+/* PATCH END */
 
 </script>
 </body>
